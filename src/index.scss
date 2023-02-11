@@ -14,8 +14,13 @@
 	justify-content: center;
 	align-items: center;
 	border: 1px #00000075 solid;
+	cursor: default;
+	&.common-zone:not(.active) {
+		background-color: #dddddd;
+	}
 	&.active {
 		background-color: #cbcbcb;
+		border: 2px #000000 solid;
 	}
 	&.border-right {
 		border-right: 2px solid black;
