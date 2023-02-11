@@ -17,3 +17,20 @@
 		border-color: black;
 	}
 }
+
+.keyboard {
+	width: 95vmin;
+	background-color: #dadada;
+	margin: auto;
+	display: flex;
+	& div {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		&:hover {
+			background-color: #cacaca;
+		}
+	}
+}

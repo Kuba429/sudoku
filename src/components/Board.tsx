@@ -1,13 +1,10 @@
-import { useEffect } from "react";
 import { useBoardStore } from "../store";
 import { Cell } from "./Cell";
 
 export function Board() {
-	const { board, activeCell } = useBoardStore((state) => ({
+	const { board } = useBoardStore((state) => ({
 		board: state.board,
-		activeCell: state.activeCell,
 	}));
-	useEffect(() => console.log(activeCell), [activeCell]);
 	return (
 		<div className="board">
 			{board.map((row, y) =>

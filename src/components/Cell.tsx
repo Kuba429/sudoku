@@ -12,6 +12,7 @@ export function Cell({
 		setActiveCell: state.setActiveCell,
 	}));
 	const handleClick = () => {
+		if (!cell.canChange) return;
 		setActiveCell({ x: cell.x, y: cell.y });
 	};
 	const activeClass =
