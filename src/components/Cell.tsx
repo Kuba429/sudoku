@@ -3,15 +3,14 @@ import { boardType } from "./Board";
 
 type cellType = boardType[number][number] & { x: number; y: number };
 export function Cell({ cell }: { cell: cellType }) {
-	const {
-		activeCell,
-		setActiveCell,
-		commonZone: commonZone,
-	} = useBoardStore((state) => ({
-		activeCell: state.activeCell,
-		setActiveCell: state.setActiveCell,
-		commonZone: state.commonZone,
-	}));
+	const { activeCell, setActiveCell, commonZone, invalid } = useBoardStore(
+		(state) => ({
+			activeCell: state.activeCell,
+			setActiveCell: state.setActiveCell,
+			commonZone: state.commonZone,
+			invalid: state.invalid,
+		})
+	);
 	const handleClick = () => {
 		if (!cell.canChange) return;
 		setActiveCell({ x: cell.x, y: cell.y });
@@ -19,7 +18,7 @@ export function Cell({ cell }: { cell: cellType }) {
 	return (
 		<div
 			onClick={handleClick}
-			className={getCellClasses(cell, activeCell, commonZone)}
+			className={getCellClasses(cell, activeCell, commonZone, invalid)}
 		>
 			{cell.value || ""}
 		</div>
@@ -29,7 +28,8 @@ export function Cell({ cell }: { cell: cellType }) {
 function getCellClasses(
 	cell: cellType,
 	activeCell: { x: number; y: number } | null,
-	commonZone: { x: number; y: number }[]
+	commonZone: { x: number; y: number }[],
+	invalid: { x: number; y: number }[]
 ) {
 	const classes: string[] = ["cell"];
 	const { x, y } = cell;
@@ -40,5 +40,8 @@ function getCellClasses(
 	if (y === 2 || y === 5) classes.push("border-bottom");
 	if (commonZone.findIndex((c) => c.x === x && c.y === y) !== -1)
 		classes.push("common-zone");
+	console.log(invalid);
+	if (invalid.findIndex((c) => c.x === x && c.y === y) !== -1)
+		classes.push("invalid");
 	return classes.join(" ");
 }

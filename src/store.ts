@@ -5,6 +5,7 @@ interface BoardState {
 	board: boardType;
 	activeCell: { x: number; y: number } | null;
 	commonZone: { x: number; y: number }[];
+	invalid: { x: number; y: number }[];
 	setActiveCell: (props: { x: number; y: number }) => void;
 	setCellValue: (newValue: number) => void;
 }
@@ -12,6 +13,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 	board: getBoard(),
 	activeCell: null,
 	commonZone: [],
+	invalid: [],
 	setActiveCell: ({ x, y }) =>
 		set(() => ({
 			activeCell: { x, y },
@@ -24,7 +26,19 @@ export const useBoardStore = create<BoardState>((set) => ({
 				state.board[state.activeCell.y][state.activeCell.x];
 			if (!itemToChange.canChange) return {};
 			itemToChange.value = newValue;
-			return { board: state.board };
+			// TODO add invalid values to state; before adding more, check if the ones already present in the array are still invalid (remove if not)
+			// having done that, invalid cells are effectively updated on every input
+			const newInvalid = getCommonZone({ ...state.activeCell }).filter(
+				(cell) =>
+					state.board[cell.y][cell.x].value !== 0 &&
+					state.board[cell.y][cell.x].value === newValue
+			);
+			if (newInvalid.length > 3)
+				state.invalid = [...state.invalid, ...newInvalid];
+			return {
+				board: state.board,
+				invalid: state.invalid,
+			};
 		}),
 }));
 function getCommonZone(cell: { x: number; y: number }) {
