@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import { useBoardStore } from "../store";
 
 export function Keyboard() {
-	const numbers = new Array(9).fill(0).map((_, idx) => idx + 1);
+	const setCellValue = useBoardStore((state) => state.setCellValue);
+	useEffect(() => {
+		const cb = (e: KeyboardEvent) =>
+			isDigit(+e.key) && setCellValue(+e.key);
+		document.addEventListener("keydown", cb);
+		return () => {
+			document.removeEventListener("keydown", cb);
+		};
+	}, [setCellValue]);
+	const numbers = new Array(10).fill(0).map((_, idx) => idx);
 	return (
 		<div className="keyboard">
 			{numbers.map((x) => (
@@ -14,4 +24,7 @@ export function Keyboard() {
 function NumberKey({ num }: { num: number }) {
 	const setCellValue = useBoardStore((state) => state.setCellValue);
 	return <div onClick={() => setCellValue(num)}>{num}</div>;
+}
+function isDigit(num: number) {
+	return [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].findIndex((i) => i === num) !== -1;
 }
