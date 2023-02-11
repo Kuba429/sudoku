@@ -27,18 +27,16 @@ export const useBoardStore = create<BoardState>((set) => ({
 			return { board: state.board };
 		}),
 }));
-
 function getCommonZone(cell: { x: number; y: number }) {
 	const peers: { x: number; y: number }[] = [];
 	// square
+	// what's happening:
+	// cells inside a square happen to have the same Math.floor(x/3) and Math.floor(y/3) as other cells in the same square
 	for (let y = 0; y < 9; y++) {
-		if (Math.floor(cell.y / 3) !== Math.floor(y / 3)) {
-			continue;
-		}
+		if (Math.floor(cell.y / 3) !== Math.floor(y / 3)) continue;
 		for (let x = 0; x < 9; x++) {
-			if (Math.floor(cell.x / 3) === Math.floor(x / 3)) {
-				peers.push({ x, y });
-			}
+			if (Math.floor(cell.x / 3) !== Math.floor(x / 3)) continue;
+			peers.push({ x, y });
 		}
 	}
 	for (let i = 0; i < 9; i++) {

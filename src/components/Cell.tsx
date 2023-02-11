@@ -1,11 +1,8 @@
 import { useBoardStore } from "../store";
 import { boardType } from "./Board";
 
-export function Cell({
-	cell,
-}: {
-	cell: boardType[number][number] & { x: number; y: number };
-}) {
+type cellType = boardType[number][number] & { x: number; y: number };
+export function Cell({ cell }: { cell: cellType }) {
 	const {
 		activeCell,
 		setActiveCell,
@@ -22,7 +19,7 @@ export function Cell({
 	return (
 		<div
 			onClick={handleClick}
-			className={getCellClasses(cell.x, cell.y, activeCell, commonZone)}
+			className={getCellClasses(cell, activeCell, commonZone)}
 		>
 			{cell.value || ""}
 		</div>
@@ -30,12 +27,12 @@ export function Cell({
 }
 
 function getCellClasses(
-	x: number,
-	y: number,
+	cell: cellType,
 	activeCell: { x: number; y: number } | null,
 	commonZone: { x: number; y: number }[]
 ) {
 	const classes: string[] = ["cell"];
+	const { x, y } = cell;
 	if (activeCell?.x === x && activeCell?.y === y) classes.push("active");
 	if (x === 2 || x === 5) classes.push("border-right");
 	if (x === 3 || x === 6) classes.push("border-left");

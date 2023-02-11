@@ -34,6 +34,9 @@
 	&.border-bottom {
 		border-bottom: 2px solid black;
 	}
+	&.invalid {
+		background-color: red;
+	}
 }
 
 .keyboard {
