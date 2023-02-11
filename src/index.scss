@@ -1,0 +1,15 @@
+.board {
+	width: 95vmin;
+	height: 95vmin;
+	background-color: #eaeaea;
+	margin: auto;
+	display: grid;
+	grid-template-rows: repeat(9, 1fr);
+	grid-template-columns: repeat(9, 1fr);
+}
+
+.cell {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
