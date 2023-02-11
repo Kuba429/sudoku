@@ -1,9 +1,11 @@
 import { useBoardStore } from "../store";
+import { boardType } from "./Board";
 
 export function Cell({
 	cell,
 }: {
-	cell: { value: number; x: number; y: number };
+	//cell: { value: number; canChange: boolean; x: number; y: number };
+	cell: boardType[number][number] & { x: number; y: number };
 }) {
 	const { activeCell, setActiveCell } = useBoardStore((state) => ({
 		activeCell: state.activeCell,

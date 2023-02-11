@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { getBoard } from "./components/Board";
+import { boardType, getBoard } from "./components/Board";
 
 interface BoardState {
-	board: number[][];
+	board: boardType;
 	activeCell: { x: number; y: number } | null;
 	setActiveCell: (props: { x: number; y: number }) => void;
 }
