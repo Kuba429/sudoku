@@ -26,21 +26,45 @@ export const useBoardStore = create<BoardState>((set) => ({
 				state.board[state.activeCell.y][state.activeCell.x];
 			if (!itemToChange.canChange) return {};
 			itemToChange.value = newValue;
-			// TODO add invalid values to state; before adding more, check if the ones already present in the array are still invalid (remove if not)
-			// having done that, invalid cells are effectively updated on every input
-			const newInvalid = getCommonZone({ ...state.activeCell }).filter(
-				(cell) =>
-					state.board[cell.y][cell.x].value !== 0 &&
-					state.board[cell.y][cell.x].value === newValue
-			);
-			if (newInvalid.length > 3)
-				state.invalid = [...state.invalid, ...newInvalid];
 			return {
 				board: state.board,
-				invalid: state.invalid,
+				invalid: updateInvalid(
+					newValue,
+					state.invalid,
+					state.activeCell,
+					state.board
+				),
 			};
 		}),
 }));
+
+function updateInvalid(
+	valueToCheck: number,
+	invalid: { x: number; y: number }[],
+	activeCell: { x: number; y: number },
+	board: boardType
+) {
+	invalid = invalid.filter((cell) => !isValid(cell.x, cell.y, board));
+	const newInvalid = getCommonZone({ ...activeCell }).filter(
+		(cell) =>
+			board[cell.y][cell.x].value !== 0 &&
+			board[cell.y][cell.x].value === valueToCheck
+	);
+	if (newInvalid.length > 3) return invalid.concat(newInvalid);
+	return invalid;
+}
+
+function isValid(x: number, y: number, board: boardType) {
+	return (
+		board[y][x].value === 0 || // remember there can be multiple 0s in a zone
+		getCommonZone({ x, y }).every(
+			(cell) =>
+				(cell.x === x && cell.y === y) || // ignore the cell that's being currently checked
+				board[cell.y][cell.x].value !== board[y][x].value
+		)
+	);
+}
+
 function getCommonZone(cell: { x: number; y: number }) {
 	const peers: { x: number; y: number }[] = [];
 	// square

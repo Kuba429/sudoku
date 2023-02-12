@@ -40,7 +40,6 @@ function getCellClasses(
 	if (y === 2 || y === 5) classes.push("border-bottom");
 	if (commonZone.findIndex((c) => c.x === x && c.y === y) !== -1)
 		classes.push("common-zone");
-	console.log(invalid);
 	if (invalid.findIndex((c) => c.x === x && c.y === y) !== -1)
 		classes.push("invalid");
 	return classes.join(" ");
