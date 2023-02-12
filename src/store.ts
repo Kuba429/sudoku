@@ -9,12 +9,14 @@ interface BoardState {
 	invalid: position[];
 	setActiveCell: (props: position) => void;
 	setCellValue: (newValue: number) => void;
+	setBoard: (newBoard: boardType) => void;
 }
 export const useBoardStore = create<BoardState>((set) => ({
 	board: getBoard(),
 	activeCell: null,
 	commonZone: [],
 	invalid: [],
+	setBoard: (board) => set(() => ({ board })),
 	setActiveCell: ({ x, y }) =>
 		set(() => ({
 			activeCell: { x, y },
@@ -29,7 +31,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 			itemToChange.value = newValue;
 			return {
 				board: state.board,
-				invalid: updateInvalid(
+				invalid: getInvalid(
 					newValue,
 					state.invalid,
 					state.activeCell,
@@ -39,7 +41,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 		}),
 }));
 
-function updateInvalid(
+export function getInvalid(
 	valueToCheck: number,
 	invalid: position[],
 	activeCell: position,

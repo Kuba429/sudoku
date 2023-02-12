@@ -2,7 +2,7 @@ import { useBoardStore } from "../store";
 import { boardType } from "./Board";
 
 export type position = { x: number; y: number };
-type cellType = boardType[number][number] & position;
+export type cellType = boardType[number][number] & position;
 
 export function Cell({ cell }: { cell: cellType }) {
 	const { activeCell, setActiveCell, commonZone, invalid } = useBoardStore(
