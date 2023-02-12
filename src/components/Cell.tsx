@@ -1,7 +1,9 @@
 import { useBoardStore } from "../store";
 import { boardType } from "./Board";
 
-type cellType = boardType[number][number] & { x: number; y: number };
+export type position = { x: number; y: number };
+type cellType = boardType[number][number] & position;
+
 export function Cell({ cell }: { cell: cellType }) {
 	const { activeCell, setActiveCell, commonZone, invalid } = useBoardStore(
 		(state) => ({
@@ -27,9 +29,9 @@ export function Cell({ cell }: { cell: cellType }) {
 
 function getCellClasses(
 	cell: cellType,
-	activeCell: { x: number; y: number } | null,
-	commonZone: { x: number; y: number }[],
-	invalid: { x: number; y: number }[]
+	activeCell: position | null,
+	commonZone: position[],
+	invalid: position[]
 ) {
 	const classes: string[] = ["cell"];
 	const { x, y } = cell;

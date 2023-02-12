@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { boardType, getBoard } from "./components/Board";
+import { position } from "./components/Cell";
 
 interface BoardState {
 	board: boardType;
-	activeCell: { x: number; y: number } | null;
-	commonZone: { x: number; y: number }[];
-	invalid: { x: number; y: number }[];
-	setActiveCell: (props: { x: number; y: number }) => void;
+	activeCell: position | null;
+	commonZone: position[];
+	invalid: position[];
+	setActiveCell: (props: position) => void;
 	setCellValue: (newValue: number) => void;
 }
 export const useBoardStore = create<BoardState>((set) => ({
@@ -40,8 +41,8 @@ export const useBoardStore = create<BoardState>((set) => ({
 
 function updateInvalid(
 	valueToCheck: number,
-	invalid: { x: number; y: number }[],
-	activeCell: { x: number; y: number },
+	invalid: position[],
+	activeCell: position,
 	board: boardType
 ) {
 	invalid = invalid.filter((cell) => !isValid(cell.x, cell.y, board));
@@ -65,8 +66,8 @@ function isValid(x: number, y: number, board: boardType) {
 	);
 }
 
-function getCommonZone(cell: { x: number; y: number }) {
-	const peers: { x: number; y: number }[] = [];
+function getCommonZone(cell: position) {
+	const peers: position[] = [];
 	// square
 	// what's happening:
 	// cells inside a square happen to have the same Math.floor(x/3) and Math.floor(y/3) as other cells in the same square
