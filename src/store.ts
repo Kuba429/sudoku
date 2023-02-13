@@ -57,7 +57,7 @@ export function getInvalid(
 	return invalid;
 }
 
-function isValid(x: number, y: number, board: boardType) {
+export function isValid(x: number, y: number, board: boardType) {
 	return (
 		board[y][x].value === 0 || // remember there can be multiple 0s in a zone
 		getCommonZone({ x, y }).every(
