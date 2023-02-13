@@ -43,12 +43,12 @@ export function solveBoard(ogBoard: boardType) {
 	const board: cellType[][] = ogBoard.map((row, y) =>
 		row.map((cell, x) => ({ ...cell, y, x }))
 	);
-	const flatBoard = board.flat();
+	const flatBoard = board.flat().filter((c) => c.canChange);
+	flatBoard.forEach((c) => (c.value = 0));
 	let pointer = 0;
 	while (pointer < flatBoard.length) {
 		if (pointer < 0) return null;
 		const cell = flatBoard[pointer];
-		// TODO this is not the correct condition in this case; it doesn't allow 9 for the first cell; at the beginning of this function filter out unchangable cells and set all the other ones to 0
 		if (cell.value === 9) {
 			cell.value = 0;
 			pointer--;
