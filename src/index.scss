@@ -1,7 +1,19 @@
+:root {
+	--board-bg: #ffffff;
+	--contrast: #000000;
+	--border: #00000075;
+	--border-active: #000000;
+	--border-edge: #000000;
+	--accent: #2176ae;
+	--active-bg: #d7eeff;
+	--common-bg: #d7eeff;
+	--invalid: #fe6666;
+	--invalid-light: #fe8888;
+}
 .board {
 	width: 95vmin;
 	height: 95vmin;
-	background-color: #eaeaea;
+	background-color: var(--board-bg);
 	margin: auto;
 	display: grid;
 	grid-template-rows: repeat(9, 1fr);
@@ -13,37 +25,50 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border: 1px #00000075 solid;
+	border: 1px var(--border) solid;
+	font-size: 1.5rem;
 	cursor: default;
-	&.common-zone:not(.active) {
-		background-color: #dddddd;
+	color: var(--accent);
+	transition: ease all 0.1s;
+	&.common-zone:not(.active, .invalid) {
+		background-color: var(--common-bg);
 	}
 	&.active {
-		background-color: #cbcbcb;
-		border: 2px #000000 solid;
+		background-color: var(--active-bg);
+		transform: scale(110%);
+		border: 2px var(--border-active) solid;
+		color: var(--contrast);
 	}
 	&.border-right {
-		border-right: 2px solid black;
+		border-right: 2px solid var(--border-edge);
 	}
 	&.border-left {
-		border-left: 2px solid black;
+		border-left: 2px solid var(--border-edge);
 	}
 	&.border-top {
-		border-top: 2px solid black;
+		border-top: 2px solid var(--border-edge);
 	}
 	&.border-bottom {
-		border-bottom: 2px solid black;
+		border-bottom: 2px solid var(--border-edge);
 	}
-	&.invalid {
-		background-color: red !important; // TODO fix
+	&.invalid:not(.active) {
+		background-color: var(--invalid);
+		&.set {
+			background-color: var(--invalid);
+		}
+	}
+	&.set {
+		font-weight: bold;
+		color: var(--contrast);
 	}
 }
 
 .keyboard {
 	width: 95vmin;
-	background-color: #dadada;
+	background-color: var(--board-bg);
 	margin: auto;
 	display: flex;
+	font-size: 1.5rem;
 	& div {
 		width: 100%;
 		aspect-ratio: 1 / 1;

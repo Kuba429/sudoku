@@ -41,6 +41,7 @@ function getCellClasses(
 	if (x === 3 || x === 6) classes.push("border-left");
 	if (y === 3 || y === 6) classes.push("border-top");
 	if (y === 2 || y === 5) classes.push("border-bottom");
+	if (!cell.canChange) classes.push("set");
 	if (commonZone.findIndex((c) => c.x === x && c.y === y) !== -1)
 		classes.push("common-zone");
 	if (invalid.findIndex((c) => c.x === x && c.y === y) !== -1)

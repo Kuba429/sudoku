@@ -41,7 +41,7 @@ export function getBoard() {
 	)!;
 	// shuffle the board
 	const flatBoard = board.flat();
-	const SHUFFLES = 50;
+	const SHUFFLES = 20;
 	for (let i = 0; i < SHUFFLES; i++) {
 		// get 0th, 3rd or 6th column or row
 		const p1 = Math.floor(Math.random() * 3) * 3;
@@ -71,7 +71,7 @@ export function getBoard() {
 			else if (c.value === target2) c.value = target1;
 		});
 	}
-	const SET_CELLS = 30;
+	const SET_CELLS = 35;
 	// make SET_CELLS unchangeable
 	for (let i = 0; i < SET_CELLS; ) {
 		const idx = Math.floor(Math.random() * flatBoard.length);
