@@ -14,8 +14,6 @@ export function Cell({ cell }: { cell: cellType }) {
 		})
 	);
 	const handleClick = () => {
-		console.log(cell);
-		if (!cell.canChange) return;
 		setActiveCell({ x: cell.x, y: cell.y });
 	};
 	return (
