@@ -1,7 +1,7 @@
 :root {
 	--board-bg: #ffffff;
 	--contrast: #000000;
-	--border: #00000025;
+	--border: #000000;
 	--border-active: #000000;
 	--border-edge: #000000;
 	--accent: #2176ae;
@@ -11,9 +11,30 @@
 	--invalid-light: #fe8888;
 	font-family: "Rubik", sans-serif;
 }
+:root,
+html,
+body,
+#root {
+	min-height: 100%;
+}
+#root {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.App {
+	width: 100%;
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
 .board {
-	width: 95vmin;
-	height: 95vmin;
+	aspect-ratio: 1 / 1;
+	max-height: 90vmin;
+	max-width: 90vmin;
+	width: 100%;
 	background-color: var(--board-bg);
 	margin: auto;
 	display: grid;
@@ -66,19 +87,26 @@
 }
 
 .keyboard {
-	width: 95vmin;
 	background-color: var(--board-bg);
 	margin: auto;
-	display: flex;
-	font-size: 1.5rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	font-size: 3rem;
 	& div {
-		width: 100%;
 		aspect-ratio: 1 / 1;
 		display: flex;
+		width: 5rem;
+		height: 5rem;
 		justify-content: center;
 		align-items: center;
 		&:hover {
 			background-color: #cacaca;
+		}
+		&:last-child {
+			grid-column: 1 / -1;
+			aspect-ratio: unset;
+			width: unset;
+			height: unset;
 		}
 	}
 }

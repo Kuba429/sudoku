@@ -3,6 +3,7 @@ import { useBoardStore } from "../store";
 
 export function Keyboard() {
 	const numbers = new Array(10).fill(0).map((_, idx) => idx);
+	numbers.push(numbers.shift()!); // move 0 to the end
 	useCellValueOnKeyDown();
 	return (
 		<div className="keyboard">

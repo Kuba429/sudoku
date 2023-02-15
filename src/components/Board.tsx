@@ -2,32 +2,22 @@ import { getInvalid, useBoardStore } from "../store";
 import { Cell, cellType } from "./Cell";
 
 export function Board() {
-	const { board, setBoard } = useBoardStore((state) => ({
-		board: state.board,
-		setBoard: state.setBoard,
-	}));
-	const handleSolve = () => {
-		const solved = solveBoard(board);
-		solved && setBoard(solved);
-	};
+	const { board } = useBoardStore((state) => ({ board: state.board }));
 	return (
-		<>
-			<button onClick={handleSolve}>solve</button>
-			<div className="board">
-				{board.map((row, y) =>
-					row.map((cell, x) => (
-						<Cell
-							cell={{
-								...cell,
-								x,
-								y,
-							}}
-							key={`${x}x${y}`}
-						/>
-					))
-				)}
-			</div>
-		</>
+		<div className="board">
+			{board.map((row, y) =>
+				row.map((cell, x) => (
+					<Cell
+						cell={{
+							...cell,
+							x,
+							y,
+						}}
+						key={`${x}x${y}`}
+					/>
+				))
+			)}
+		</div>
 	);
 }
 
