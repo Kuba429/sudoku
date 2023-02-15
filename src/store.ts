@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { boardType, getBoard } from "./components/Board";
-import { position } from "./components/Cell";
+import { cellType, position } from "./components/Cell";
 
 interface BoardState {
 	board: boardType;
-	activeCell: position | null;
+	activeCell: cellType | null;
 	commonZone: position[];
 	invalid: position[];
-	setActiveCell: (props: position) => void;
+	setActiveCell: (props: cellType) => void;
 	setCellValue: (newValue: number) => void;
 	setBoard: (newBoard: boardType) => void;
 }
@@ -17,10 +17,10 @@ export const useBoardStore = create<BoardState>((set) => ({
 	commonZone: [],
 	invalid: [],
 	setBoard: (board) => set(() => ({ board })),
-	setActiveCell: ({ x, y }) =>
+	setActiveCell: (cell) =>
 		set(() => ({
-			activeCell: { x, y },
-			commonZone: getCommonZone({ x, y }),
+			activeCell: cell,
+			commonZone: getCommonZone({ x: cell.x, y: cell.y }),
 		})),
 	setCellValue: (newValue) =>
 		set((state) => {

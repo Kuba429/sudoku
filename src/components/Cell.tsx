@@ -14,7 +14,7 @@ export function Cell({ cell }: { cell: cellType }) {
 		})
 	);
 	const handleClick = () => {
-		setActiveCell({ x: cell.x, y: cell.y });
+		setActiveCell(cell);
 	};
 	return (
 		<div
@@ -28,13 +28,15 @@ export function Cell({ cell }: { cell: cellType }) {
 
 function getCellClasses(
 	cell: cellType,
-	activeCell: position | null,
+	activeCell: cellType | null,
 	commonZone: position[],
 	invalid: position[]
 ) {
 	const classes: string[] = ["cell"];
 	const { x, y } = cell;
 	if (activeCell?.x === x && activeCell?.y === y) classes.push("active");
+	if (cell.value !== 0 && activeCell?.value === cell.value)
+		classes.push("highlight");
 	if (x === 2 || x === 5) classes.push("border-right");
 	if (x === 3 || x === 6) classes.push("border-left");
 	if (y === 3 || y === 6) classes.push("border-top");
