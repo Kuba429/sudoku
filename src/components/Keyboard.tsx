@@ -1,16 +1,23 @@
 import { useEffect } from "react";
 import { useBoardStore } from "../store";
+import { DevSolveButton } from "./DevSolveButton";
 
 export function Keyboard() {
 	const numbers = new Array(10).fill(0).map((_, idx) => idx);
 	numbers.push(numbers.shift()!); // move 0 to the end
 	useCellValueOnKeyDown();
 	return (
-		<div className="keyboard">
-			{numbers.map((x) => (
-				<NumberKey num={x} key={"numkey" + x} />
-			))}
-		</div>
+		<>
+			<div className="keyboard">
+				{numbers.map((x) => (
+					<NumberKey num={x} key={"numkey" + x} />
+				))}
+			</div>
+
+			{
+				//	<DevSolveButton />
+			}
+		</>
 	);
 }
 function NumberKey({ num }: { num: number }) {
