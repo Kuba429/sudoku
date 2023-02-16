@@ -51,8 +51,10 @@ export const useBoardStore = create<BoardState>((set) => ({
 function wouldBeSolvable(x: number, y: number, board: boardType) {
 	if (board[y][x].value === 0) return true;
 	// check whether the board would be solvable assuming this value won't change
-	if (memoizedSolvedBoards.some((b) => b[y][x].value === board[y][x].value))
-		return true;
+	for (let i = 0; i < memoizedSolvedBoards.length; i++) {
+		if (memoizedSolvedBoards[i][y][x].value === board[y][x].value)
+			return true;
+	}
 	// if none of the known solved boards contains the cell, check if the board exists. If it does, add it to the list
 	const tempBoard = board.map((r) =>
 		r.map((c) => {
@@ -71,19 +73,19 @@ export function isValid(
 	board: boardType,
 	skipSolvable = false
 ) {
-	return (
-		board[y][x].value === 0 || // 0 is always valid
-		(!isColliding(x, y, board) &&
-			(skipSolvable || wouldBeSolvable(x, y, board)))
-	);
+	if (board[y][x].value === 0) return true; // 0 is always valid
+	if (skipSolvable) return !isColliding(x, y, board);
+	return !isColliding(x, y, board) && wouldBeSolvable(x, y, board);
 }
 
 function isColliding(x: number, y: number, board: boardType) {
-	return getCommonZone({ x, y }).some(
-		(cell) =>
-			(cell.x !== x || cell.y !== y) && // ignore the cell that's being currently checked
-			board[cell.y][cell.x].value === board[y][x].value
-	);
+	const commonZone = getCommonZone({ x, y });
+	for (let i = 0; i < commonZone.length; i++) {
+		const cell = commonZone[i];
+		if (cell.x === x && cell.y === y) continue; // ignore the cell that's being currently checked
+		if (board[cell.y][cell.x].value === board[y][x].value) return true;
+	}
+	return false;
 }
 
 export function getInvalid(
