@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import { boardType, getBoard } from "./components/Board";
+import { boardType, getBoard, solveBoard } from "./components/Board";
 import { cellType, position } from "./components/Cell";
 
+const memoizedSolvedBoards: boardType[] = []; // TODO make it not be a global variable. Maybe include it in store. idk tho it isn't reactive 🤷
 interface BoardState {
 	board: boardType;
 	activeCell: cellType | null;
@@ -16,7 +17,12 @@ export const useBoardStore = create<BoardState>((set) => ({
 	activeCell: null,
 	commonZone: [],
 	invalid: [],
-	setBoard: (board) => set(() => ({ board })),
+	setBoard: (board) =>
+		set(() => {
+			memoizedSolvedBoards.length = 0;
+			memoizedSolvedBoards.push(board);
+			return { board };
+		}),
 	setActiveCell: (cell) =>
 		set(() => ({
 			activeCell: cell,
@@ -29,17 +35,49 @@ export const useBoardStore = create<BoardState>((set) => ({
 				state.board[state.activeCell.y][state.activeCell.x];
 			if (!itemToChange.canChange) return {};
 			itemToChange.value = newValue;
+			state.invalid = getInvalid(
+				newValue,
+				state.invalid,
+				state.activeCell,
+				state.board
+			);
 			return {
 				board: state.board,
-				invalid: getInvalid(
-					newValue,
-					state.invalid,
-					state.activeCell,
-					state.board
-				),
+				invalid: state.invalid,
 			};
 		}),
 }));
+
+function wouldBeSolvable(x: number, y: number, board: boardType) {
+	// check whether the board would be solvable assuming this value won't change
+	if (memoizedSolvedBoards.some((b) => b[y][x].value === board[y][x].value))
+		return true;
+	// if none of the known solved boards contains the cell, check if the board exists. If it does, add it to the list
+	const tempBoard = board.map((r) =>
+		r.map((c) => {
+			if (c.value !== 0) return { ...c, canChange: false };
+			return c;
+		})
+	);
+	const res = solveBoard(tempBoard);
+	if (!!res) memoizedSolvedBoards.push(res);
+	return !!res;
+}
+
+export function isValid(x: number, y: number, board: boardType) {
+	return (
+		board[y][x].value === 0 || // 0 is always valid
+		(!isColliding(x, y, board) && wouldBeSolvable(x, y, board))
+	);
+}
+
+function isColliding(x: number, y: number, board: boardType) {
+	return getCommonZone({ x, y }).some(
+		(cell) =>
+			(cell.x !== x || cell.y !== y) && // ignore the cell that's being currently checked
+			board[cell.y][cell.x].value === board[y][x].value
+	);
+}
 
 export function getInvalid(
 	valueToCheck: number,
@@ -54,20 +92,10 @@ export function getInvalid(
 			board[cell.y][cell.x].value === valueToCheck
 	);
 	if (newInvalid.length > 3) return invalid.concat(newInvalid);
+	if (!wouldBeSolvable(activeCell.x, activeCell.y, board))
+		invalid.push(activeCell);
 	return invalid;
 }
-
-export function isValid(x: number, y: number, board: boardType) {
-	return (
-		board[y][x].value === 0 || // remember there can be multiple 0s in a zone
-		getCommonZone({ x, y }).every(
-			(cell) =>
-				(cell.x === x && cell.y === y) || // ignore the cell that's being currently checked
-				board[cell.y][cell.x].value !== board[y][x].value
-		)
-	);
-}
-
 function getCommonZone(cell: position) {
 	const peers: position[] = [];
 	// square

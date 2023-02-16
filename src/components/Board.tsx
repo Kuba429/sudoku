@@ -72,7 +72,6 @@ export function getBoard() {
 	flatBoard.forEach((c) => {
 		if (c.canChange) c.value = 0;
 	});
-
 	if (!solveBoard(board)) throw new Error("Unsolvable board");
 	return board;
 }
@@ -86,7 +85,6 @@ export function solveBoard(ogBoard: boardType) {
 	let pointer = 0;
 	while (pointer < flatBoard.length) {
 		if (pointer < 0) {
-			console.log("couldn't solve a board");
 			return null;
 		}
 		const cell = flatBoard[pointer];
