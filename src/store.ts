@@ -99,7 +99,7 @@ export function getInvalid(
 			board[cell.y][cell.x].value !== 0 &&
 			board[cell.y][cell.x].value === valueToCheck
 	);
-	if (newInvalid.length > 3) return invalid.concat(newInvalid);
+	if (newInvalid.length > 3) invalid.push(...newInvalid);
 	if (!skipSolvable && !wouldBeSolvable(activeCell.x, activeCell.y, board))
 		invalid.push(activeCell);
 	return invalid;
