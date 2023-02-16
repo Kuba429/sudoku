@@ -27,7 +27,8 @@ export function getBoard() {
 			.fill(0)
 			.map(() =>
 				new Array(9).fill(0).map(() => ({ value: 0, canChange: true }))
-			)
+			),
+		true
 	)!;
 	// shuffle the board
 	const flatBoard = board.flat();
@@ -72,11 +73,11 @@ export function getBoard() {
 	flatBoard.forEach((c) => {
 		if (c.canChange) c.value = 0;
 	});
-	if (!solveBoard(board)) throw new Error("Unsolvable board");
+	if (!solveBoard(board, true)) throw new Error("Unsolvable board");
 	return board;
 }
 
-export function solveBoard(ogBoard: boardType) {
+export function solveBoard(ogBoard: boardType, skipSolvable = false) {
 	const board: cellType[][] = ogBoard.map((row, y) =>
 		row.map((cell, x) => ({ ...cell, y, x }))
 	);
@@ -95,7 +96,13 @@ export function solveBoard(ogBoard: boardType) {
 		}
 		cell.value++;
 		if (
-			getInvalid(cell.value, [], { x: cell.x, y: cell.y }, board).length
+			getInvalid(
+				cell.value,
+				[],
+				{ x: cell.x, y: cell.y },
+				board,
+				skipSolvable
+			).length
 		) {
 			continue;
 		}

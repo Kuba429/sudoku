@@ -49,6 +49,7 @@ export const useBoardStore = create<BoardState>((set) => ({
 }));
 
 function wouldBeSolvable(x: number, y: number, board: boardType) {
+	if (board[y][x].value === 0) return true;
 	// check whether the board would be solvable assuming this value won't change
 	if (memoizedSolvedBoards.some((b) => b[y][x].value === board[y][x].value))
 		return true;
@@ -59,15 +60,21 @@ function wouldBeSolvable(x: number, y: number, board: boardType) {
 			return c;
 		})
 	);
-	const res = solveBoard(tempBoard);
+	const res = solveBoard(tempBoard, true);
 	if (!!res) memoizedSolvedBoards.push(res);
 	return !!res;
 }
 
-export function isValid(x: number, y: number, board: boardType) {
+export function isValid(
+	x: number,
+	y: number,
+	board: boardType,
+	skipSolvable = false
+) {
 	return (
 		board[y][x].value === 0 || // 0 is always valid
-		(!isColliding(x, y, board) && wouldBeSolvable(x, y, board))
+		(!isColliding(x, y, board) &&
+			(skipSolvable || wouldBeSolvable(x, y, board)))
 	);
 }
 
@@ -83,7 +90,8 @@ export function getInvalid(
 	valueToCheck: number,
 	invalid: position[],
 	activeCell: position,
-	board: boardType
+	board: boardType,
+	skipSolvable = false
 ) {
 	invalid = invalid.filter((cell) => !isValid(cell.x, cell.y, board));
 	const newInvalid = getCommonZone({ ...activeCell }).filter(
@@ -92,10 +100,11 @@ export function getInvalid(
 			board[cell.y][cell.x].value === valueToCheck
 	);
 	if (newInvalid.length > 3) return invalid.concat(newInvalid);
-	if (!wouldBeSolvable(activeCell.x, activeCell.y, board))
+	if (!skipSolvable && !wouldBeSolvable(activeCell.x, activeCell.y, board))
 		invalid.push(activeCell);
 	return invalid;
 }
+
 function getCommonZone(cell: position) {
 	const peers: position[] = [];
 	// square
